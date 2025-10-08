@@ -1,0 +1,92 @@
+@import "../shared/fonts/fonts.css";
+
+#root {
+  /* background: #ffe9d6; */
+}
+
+:root {
+  /*  color-scheme */
+  color-scheme: light dark;
+
+  /* container */
+  --container-size: 1440px;
+
+  /* font-family */
+
+  /* font-weight */
+
+  /* font-size */
+
+  /* font-style */
+
+  /* letter-spacing */
+
+  /* line-height */
+
+  /* border-radius */
+
+  /* spacing-size */
+
+  /* colore-scheme-light */
+  /* 🌊 Холодная (основная) гамма */
+  --color-sky-lightest: #ebf7ff; /* очень светлый голубой фон */
+  --color-sky-light: #d2e2ee; /* светлый голубой */
+  --color-sky-medium: #afc6d4; /* приглушённый голубовато-серый */
+  --color-sky-bright: #b4e1ff; /* чистый небесный акцент */
+  --color-sky-medium-bright: #7ea9c8;
+  --color-sky-dark: #33658a; /* насыщенный синий */
+  --color-sky-dark-denim: #274c68;
+  --color-sky-metallic: #376e95;
+  --color-sky-dark-thunder: #0b161e;
+  --color-sky-deep: #2f4858; /* глубокий холодный сине-серый */
+
+  /* ☀️ Тёплая (контрастная) гамма */
+  --color-sand-light: #ffe9d6; /* светлый песочный фон */
+  --color-sand: #fed9b7; /* персиковый */
+  --color-clay: #c4856e; /* глиняный тёплый тон */
+  --color-terra: #b86f52; /* терракотовый, насыщенный */
+
+  /* 🌸 Акцентная (дополнительная) гамма */
+  --color-rose-light: #fdecf2; /* светло-розовый фон */
+  --color-rose-accent: #9c0d38; /* акцент — бордово-малиновый */
+  --color-rose-dark: #5c0a27; /* глубокий винный */
+
+  --color-gold-bright: #ffef5c;
+
+  --color-standart: #000;
+
+  /* --label-low-color: var(--color-rose-accent); */
+
+  /* Использование цветов в элементах */
+
+  --label-color: var(--color-sky-dark-thunder);
+  --water-base: var(--color-sky-medium-bright);
+  --barrel-fill: var(--color-sky-dark-denim);
+  --barrel-stroke: var(--color-sky-dark-thunder);
+  --hoop-fill: var(--color-sky-metallic);
+  --fish-fill: var(--color-gold-bright);
+  --scale-tick: var(--color-sky-dark-thunder);
+  --scale-text: var(--color-sky-dark-thunder);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  /* min-width: 320px; */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(
+    90deg,
+    var(--color-sand-light) 0%,
+    var(--color-sky-light) 55%,
+    var(--color-sky-medium) 100%
+  );
+  font-family: "Google Sans", Arial, sans-serif;
+}

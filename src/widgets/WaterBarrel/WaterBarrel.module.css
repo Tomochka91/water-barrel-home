@@ -1,0 +1,128 @@
+@keyframes wave-move-1 {
+  from {
+    transform: translateX(0px);
+  }
+  to {
+    transform: translateX(-160px);
+  }
+}
+
+@keyframes wave-move-2 {
+  from {
+    transform: translateX(0px);
+  }
+  to {
+    transform: translateX(160px);
+  }
+}
+
+@keyframes fish-swim {
+  0% {
+    transform: translateX(-40px);
+  }
+  100% {
+    transform: translateX(40px);
+  }
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+}
+
+/* SVG по умолчанию растягивается ровно в заданный width/height из props */
+.svg {
+  display: block;
+}
+
+/* Тень */
+.shadow {
+  fill: var(--color-standart);
+  opacity: 0.15;
+}
+
+/* Корпус бочки и обручи */
+.barrel {
+  fill: var(--barrel-fill);
+  stroke: var(--barrel-stroke);
+  stroke-width: 2;
+}
+
+.hoop {
+  fill: var(--hoop-fill);
+}
+
+/* Вода */
+.water {
+  fill: var(--water-base);
+}
+
+/* Волны */
+.wave1 {
+  animation: wave-move-1 6s linear infinite;
+}
+
+.wave2 {
+  animation: wave-move-2 9s linear infinite;
+  opacity: 0.35;
+}
+
+/* Рыбка */
+.fish {
+  animation: fish-swim 3s ease-in-out infinite alternate;
+}
+
+.fishBody,
+.fishTail {
+  fill: var(--fish-fill);
+}
+
+.fishEye {
+  fill: var(--color-standart);
+}
+
+/* Подпись */
+.label {
+  font-family: "Google Sans", Arial, sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--label-color);
+}
+
+/* Шкала слева */
+.scale {
+  pointer-events: none; /* чтобы клики не перехватывала */
+  user-select: none;
+}
+
+.scaleTick {
+  stroke: var(--scale-tick);
+  stroke-width: 1;
+  opacity: 0.45;
+  shape-rendering: crispEdges;
+}
+
+.scaleText {
+  font-family: "Google Sans", Arial, sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  fill: var(--scale-text);
+  opacity: 0.8;
+}
+
+.low {
+  --label-color: var(--color-rose-accent);
+  --fish-fill: var(--color-rose-dark);
+}
+
+/* Доступность: если пользователь просит уменьшить движение */
+@media (prefers-reduced-motion: reduce) {
+  .wave1,
+  .wave2,
+  .fish {
+    animation: none !important;
+  }
+}

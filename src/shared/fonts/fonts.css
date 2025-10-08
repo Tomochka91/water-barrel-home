@@ -1,0 +1,35 @@
+@font-face {
+  font-display: swap;
+  font-family: "Google Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Google Sans Regular"),
+    url("./GoogleSansCode-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Google Sans";
+  font-style: italic;
+  font-weight: 400;
+  src: local("Google Sans Italic"),
+    url("./GoogleSansCode-Italic.ttf") format("truetype");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Google Sans";
+  font-style: normal;
+  font-weight: 600;
+  src: local("Google Sans SemiBold"),
+    url("./GoogleSansCode-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Google Sans";
+  font-style: italic;
+  font-weight: 600;
+  src: local("Google Sans SemiBold Italic"),
+    url("./GoogleSansCode-SemiBoldItalic.ttf") format("truetype");
+}
