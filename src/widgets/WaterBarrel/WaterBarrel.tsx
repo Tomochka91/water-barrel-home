@@ -25,7 +25,7 @@ type WaterBarrelProps = {
 };
 
 export function WaterBarrel({
-  value = 40,
+  value = 100,
   max = 100,
   width = 260,
   showLabel = true,
@@ -46,7 +46,7 @@ export function WaterBarrel({
   const scaleGutter = showScale ? 48 : 0; // слева место под «100%»
   const svgOuterW = width + scaleGutter; // общая ширина SVG
 
-  const clamped = Math.max(0, Math.min(value, max));
+  const clamped = parseFloat(Math.max(0, Math.min(value, max)).toFixed(2));
   const level = clamped / max; // 0..1
 
   // Геометрия внутренней области бочки (куда будет заливаться вода)
@@ -89,6 +89,14 @@ export function WaterBarrel({
 
   return (
     <div className={clsx(styles.root, lowWater && styles.low)}>
+      {showLabel && (
+        <div className={styles.label}>
+          <h1>Уровень воды в бочке:</h1>
+          <span>
+            {clamped}/{max} ({percent}%)
+          </span>
+        </div>
+      )}
       <svg
         className={styles.svg}
         viewBox={`0 0 ${svgOuterW} ${svgH}`}
@@ -252,12 +260,6 @@ export function WaterBarrel({
           />
         </g>
       </svg>
-
-      {showLabel && (
-        <div className={styles.label}>
-          Уровень: {clamped}/{max} ({percent}%)
-        </div>
-      )}
     </div>
   );
 }

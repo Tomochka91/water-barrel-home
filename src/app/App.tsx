@@ -1,43 +1,34 @@
 import { useState } from "react";
 import "../app/global.css";
 import { WaterBarrel } from "../widgets/WaterBarrel/WaterBarrel";
+import {
+  mapMessageToWaterData,
+  type messageData,
+} from "../shared/mappers/websocketMapper";
+import { useWebSocket } from "../shared/hooks/useWebSocket";
+import { useMediaQuery } from "react-responsive";
 
 function App() {
-  const [val, setVal] = useState(30);
-  const [label, setLabel] = useState(true);
+  const { values } = useWebSocket<messageData>("ws://192.168.1.2:8000/ws");
+  const [label] = useState(true);
 
-  const lowWater = val <= 30;
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+
+  const waterValues = mapMessageToWaterData(values);
+  const lowWater = waterValues.waterLevel <= 30;
 
   return (
-    <div>
+    <div className="container">
       <WaterBarrel
-        value={val}
+        value={waterValues.waterLevel}
         max={100}
-        width={260}
+        width={isMobile ? 240 : 260}
         showLabel={label}
         lowWater={lowWater}
       />
-
-      <label>
-        <span>Уровень воды:</span>
-        <input
-          type="range"
-          min={0}
-          max={100}
-          value={val}
-          onChange={(e) => setVal(parseInt(e.target.value, 10))}
-        />
-        <span>{val}%</span>
-      </label>
-
-      <label>
-        <input
-          type="checkbox"
-          checked={label}
-          onChange={(e) => setLabel(e.target.checked)}
-        />
-        Показывать подпись
-      </label>
+      {waterValues.waterPressure && (
+        <p>Давление: {waterValues.waterPressure.toFixed(2)}</p>
+      )}
     </div>
   );
 }

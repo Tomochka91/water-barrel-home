@@ -1,7 +1,7 @@
 @import "../shared/fonts/fonts.css";
 
 #root {
-  /* background: #ffe9d6; */
+  margin: auto;
 }
 
 :root {
@@ -89,4 +89,32 @@ body {
     var(--color-sky-medium) 100%
   );
   font-family: "Google Sans", Arial, sans-serif;
+}
+
+h1 {
+  font-family: "Google Sans", Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Google Sans", Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+@media (width < 768px) {
+  .container {
+    flex-direction: column;
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 14px;
+  }
 }
