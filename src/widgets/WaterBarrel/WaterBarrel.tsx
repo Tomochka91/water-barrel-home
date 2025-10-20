@@ -92,9 +92,12 @@ export function WaterBarrel({
       {showLabel && (
         <div className={styles.label}>
           <h1>Уровень воды в бочке:</h1>
-          <span>
-            {clamped}/{max} ({percent}%)
-          </span>
+          <div className={styles.values}>
+            <span>
+              {clamped}/{max}
+            </span>
+            <span>({percent}%)</span>
+          </div>
         </div>
       )}
       <svg

@@ -15,8 +15,6 @@ export function useWebSocket<
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // let socket: WebSocket | null = null;
-    // let timer: any;
     function cleanupTimer() {
       if (reconnectTimerRef.current) {
         clearTimeout(reconnectTimerRef.current);
