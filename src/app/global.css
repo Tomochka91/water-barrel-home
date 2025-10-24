@@ -58,6 +58,7 @@ html {
   --color-gold-bright: #ffef5c;
 
   --color-standart: #000;
+  --color-standart-white: #fff;
 
   /* Использование цветов в элементах */
 
@@ -103,9 +104,9 @@ h1 {
 }
 
 .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
   font-family: "Google Sans", Arial, sans-serif;
   font-size: 2rem;
   font-weight: 600;
@@ -114,7 +115,8 @@ h1 {
 
 @media (width < 768px) {
   .container {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    column-gap: 0;
     font-size: 1.4rem;
   }
 

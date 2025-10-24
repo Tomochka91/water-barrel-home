@@ -3,8 +3,8 @@ import { useWebSocket } from "../../shared/hooks/useWebSocket";
 import { COMMAND_LABELS } from "../../utils/labels";
 import type { CommandKey } from "../../utils/types";
 
-export function WaterControls() {
-  const { values, connected } = useWebSocket("wss://192.168.1.2:8000/ws");
+export function WaterControls({ values, connected }) {
+  // const { values, connected } = useWebSocket("wss://192.168.1.2:8000/ws");
   const { write, busy, error } = useOpcWriter("https://192.168.1.2:8000");
 
   async function toggle(name: CommandKey) {

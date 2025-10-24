@@ -102,11 +102,8 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  gap: 1.6rem;
-}
-
-.values span {
-  width: 10rem;
+  /* align-items: center; */
+  /* gap: 1.6rem; */
 }
 
 /* Шкала слева */

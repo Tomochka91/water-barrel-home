@@ -43,6 +43,7 @@ export function useWebSocket<
 
       socket.onmessage = (e: MessageEvent) => {
         const message = JSON.parse(e.data) as ServerMessage<T>;
+        // console.log(message);
         if (message.snapshot) setValues(message.snapshot);
 
         if (message.update)

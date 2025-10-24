@@ -7,15 +7,18 @@ import {
 } from "../shared/mappers/websocketMapper";
 import { useWebSocket } from "../shared/hooks/useWebSocket";
 import { useMediaQuery } from "react-responsive";
+import { PressureChartLive } from "../widgets/Charts/PressureChartLive/PressureChartLive";
 import { WaterControls } from "../widgets/WaterControls/WaterControls";
-import { PressureChart } from "../widgets/Charts/PressureChart/PressureChart";
+import clsx from "clsx";
 
 function App() {
-  const proto = location.protocol === "https:" ? "wss" : "ws";
-  const { values } = useWebSocket<messageData>(
-    `${proto}://${location.host}/ws`
+  // const proto = location.protocol === "https:" ? "wss" : "ws";
+  // const { values } = useWebSocket<messageData>(
+  //   `${proto}://${location.host}/ws`
+  // );
+  const { values, connected } = useWebSocket<messageData>(
+    "ws://192.168.1.2:8000/ws"
   );
-  // const { values } = useWebSocket<messageData>("ws://192.168.1.2:8000/ws");
   const [label] = useState(true);
 
   const isMobile = useMediaQuery({ maxWidth: 768 });
@@ -25,21 +28,23 @@ function App() {
 
   return (
     <div className="container">
-      {/* <WaterBarrel
+      {waterValues.waterPressure && (
+        <PressureChartLive
+          pressure={Number(waterValues.waterPressure.toFixed(2))}
+        />
+      )}
+      <WaterBarrel
         value={waterValues.waterLevel}
         max={100}
         width={isMobile ? 240 : 260}
         showLabel={label}
         lowWater={lowWater}
-      /> */}
-      <PressureChart />
-      {/* <PressureChartLive
-        pressure={Number(waterValues.waterPressure.toFixed(2))}
-      /> */}
+      />
+
       {/* {waterValues.waterPressure && (
         <p>Давление: {waterValues.waterPressure.toFixed(2)}</p>
       )} */}
-      {/* <WaterControls /> */}
+      {/* <WaterControls values={values} connected={connected} /> */}
     </div>
   );
 }

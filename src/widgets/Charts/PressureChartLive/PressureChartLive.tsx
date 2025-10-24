@@ -7,8 +7,8 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
-  LabelList,
 } from "recharts";
+import styles from "./PressureChartLive.module.css";
 
 // сколько времени держим на экране (60 секунд)
 const WINDOW_MS = 60_000;
@@ -43,7 +43,7 @@ export function PressureChartLive({ pressure }: PressureProps) {
   }, []);
 
   return (
-    <div style={{ width: 320, height: 320 }}>
+    <div className={styles.container}>
       <ResponsiveContainer>
         <LineChart
           data={data}
@@ -56,6 +56,7 @@ export function PressureChartLive({ pressure }: PressureProps) {
             domain={xDomain}
             tickFormatter={(t) => formatTime(Number(t))}
             // чтобы метки не наслаивались при маленькой ширине
+            tickCount={4}
             minTickGap={24}
             tick={{ fontSize: 16, fill: "var(--label-color)" }}
           />
@@ -78,19 +79,10 @@ export function PressureChartLive({ pressure }: PressureProps) {
             activeDot={{
               r: 2,
               fill: "var(--pressure-line)",
-              stroke: "#fff",
+              stroke: "var(--color-standart-white)",
               strokeWidth: 2,
             }}
-          >
-            <LabelList
-              dataKey="pr"
-              position="top"
-              offset={8}
-              fill="var(--color-rose-dark)"
-              fontSize={12}
-              // formatter={(v) => v.toFixed(2)} // формат числа
-            />
-          </Line>
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>
