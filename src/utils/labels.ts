@@ -2,10 +2,10 @@ import type { CommandKey, StatusKey } from "./types";
 
 export const COMMAND_LABELS: Record<CommandKey, string> = {
   alm_reset_cmd: "Сброс аварий",
-  auto_alm_reset_cmd: "Автосброс аварий",
-  enable_P1_cmd: "Насос осмоса P1: разрешить",
-  enable_P2_cmd: "Насос осмоса P2: разрешить",
-  enable_shedule: "Работа по расписанию",
+  enable_shedule: "Работать по расписанию",
+  auto_alm_reset_cmd: "Автоматический сброс аварий",
+  enable_P1_cmd: "Насос осмоса P1",
+  enable_P2_cmd: "Насос осмоса P2",
 };
 
 export const STATUS_LABELS: Record<StatusKey, string> = {

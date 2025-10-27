@@ -1,27 +1,35 @@
+import clsx from "clsx";
 import { useOpcWriter } from "../../shared/hooks/useOpcWriter";
-import { useWebSocket } from "../../shared/hooks/useWebSocket";
 import { COMMAND_LABELS } from "../../utils/labels";
-import type { CommandKey } from "../../utils/types";
+import type { CommandKey, CommandsState } from "../../utils/types";
+import styles from "./WaterControls.module.css";
 
-export function WaterControls({ values, connected }) {
-  // const { values, connected } = useWebSocket("wss://192.168.1.2:8000/ws");
+type WaterControlsProps = {
+  commands: Partial<CommandsState>;
+  connected: boolean;
+};
+
+export function WaterControls({
+  commands,
+  connected: _connected,
+}: WaterControlsProps) {
   const { write, busy, error } = useOpcWriter("https://192.168.1.2:8000");
 
   async function toggle(name: CommandKey) {
-    const cur = Boolean(values[name]);
+    const cur = Boolean(commands[name]);
     await write(name, !cur);
   }
 
   const keys = Object.keys(COMMAND_LABELS) as CommandKey[];
 
   return (
-    <div style={{ display: "grid", gap: 10 }}>
-      <div style={{ opacity: connected ? 1 : 0.6 }}>
+    <div className={styles.container}>
+      {/* <div style={{ opacity: connected ? 1 : 0.6 }}>
         Статус: {connected ? "WS подключен" : "нет соединения"}
-      </div>
+      </div> */}
 
       {keys.map((name) => {
-        const val = Boolean(values[name]);
+        const val = Boolean(commands[name]);
         const label = COMMAND_LABELS[name];
 
         return (
@@ -30,14 +38,11 @@ export function WaterControls({ values, connected }) {
             onClick={() => toggle(name)}
             disabled={busy}
             title={name}
-            style={{
-              padding: "8px 12px",
-              borderRadius: 8,
-              background: val ? "#b0f0b0" : "#f5b0b0",
-              border: "1px solid #ccc",
-              cursor: busy ? "not-allowed" : "pointer",
-              textAlign: "left",
-            }}
+            className={clsx(
+              styles.btn,
+              busy ? styles["btn-busy"] : "",
+              val ? styles["btn-on"] : styles["btn-off"]
+            )}
           >
             {label}: <strong>{val ? "ON" : "OFF"}</strong>
           </button>

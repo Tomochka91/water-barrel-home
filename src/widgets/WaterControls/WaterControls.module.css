@@ -1,0 +1,48 @@
+.container {
+  grid-column: 2/3;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1.6rem;
+  justify-content: center;
+  align-items: start;
+}
+
+.btn {
+  width: 100%;
+  font-family: inherit;
+  font-size: 2rem;
+  display: block;
+  padding: 1.6rem 2rem;
+  border-radius: 0.8rem;
+  background-color: var(--color-sky-lightest);
+  cursor: pointer;
+  text-align: left;
+}
+
+.btn-busy {
+  cursor: not-allowed;
+}
+
+.btn-on {
+  color: #36bf51;
+  border: 1px solid #0d3014;
+}
+
+.btn-off {
+  color: #ed1d5b;
+  border: 1px solid var(--color-rose-dark);
+}
+
+@media (width < 768px) {
+  .container {
+    grid-column: 1/3;
+    gap: 1rem;
+  }
+
+  .btn {
+    font-size: 1.4rem;
+    padding: 0.6rem 1rem;
+    width: 100%;
+  }
+}

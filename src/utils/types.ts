@@ -26,5 +26,9 @@ export type StatusesState = Record<StatusKey, boolean>;
 export interface WaterSystemState {
   commands: Partial<CommandsState>;
   statuses: Partial<StatusesState>;
-  lastUpdated?: number; // Пока что не нужно
 }
+
+export type Telemetry = {
+  waterLevel: number;
+  waterPressure: number;
+};
