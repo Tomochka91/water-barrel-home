@@ -1,73 +1,118 @@
-# React + TypeScript + Vite
+# 💧 WaterBarrel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Интерактивный интерфейс мониторинга и управления системой водоснабжения.  
+Отображает **уровень воды**, **давление**, и позволяет **включать/выключать насосы и автоматику** через OPC-сервер.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Возможности
 
-## React Compiler
+- 📡 Подключение к **WebSocket** для телеметрии в реальном времени
+- ⚙️ Отправка управляющих команд через REST API (`/api/write`)
+- 💧 SVG-бочка с волнами, шкалой и рыбкой 🐟
+- 📈 Живой график давления за последние 60 секунд
+- 📱 Адаптивный интерфейс под мобильные устройства
+- 🔄 Автоматическое восстановление соединения при обрыве
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🧱 Структура проекта
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+src/
+ ├─ hooks/
+ │   ├─ useWebSocket.ts       → получение данных от WebSocket
+ │   └─ useOpcWriter.ts       → отправка команд на OPC-сервер
+ │
+ ├─ data/
+ │   ├─ mapMessageToDomain.ts → преобразование «сырых» данных в domain-модель
+ │   └─ labels.ts             → читаемые подписи для кнопок
+ │
+ ├─ widgets/
+ │   ├─ PressureChartLive/    → живой график давления
+ │   ├─ WaterBarrel/          → SVG-бочка с водой
+ │   └─ WaterControls/        → панель управления насосами
+ │
+ ├─ App.tsx                   → главный компонент приложения
+ └─ index.tsx / main.tsx      → точка входа
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ⚡️ Основные компоненты
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Компонент              | Назначение                                              |
+| ---------------------- | ------------------------------------------------------- |
+| **App**                | Корневой компонент приложения                           |
+| **PressureChartLive**  | Живой график давления за последние 60 секунд            |
+| **WaterBarrel**        | SVG-бочка с водой, волнами и шкалой                     |
+| **WaterControls**      | Панель управления насосами и автоматикой                |
+| **useWebSocket**       | Хук подключения к WebSocket-серверу                     |
+| **useOpcWriter**       | Хук отправки команд на OPC REST API                     |
+| **mapMessageToDomain** | Преобразует данные в структуру `telemetry` и `commands` |
+
+---
+
+## 🔌 Настройка окружения
+
+1. **Установить зависимости**
+
+   ```bash
+   npm install
+   # или
+   pnpm install
+   ```
+
+2. **В файле App.tsx при необходимости заменить строку:**
+
+   ```
+   const { values, connected } = useWebSocket("ws://192.168.1.2:8000/ws");
+
+   или вернуть автоматическое определение протокола:
+
+   const proto = location.protocol === "https:" ? "wss" : "ws";
+   const { values, connected } = useWebSocket(`${proto}://${location.host}/ws`);
+   ```
+
+3. **Запустить проект**
+
+   ```
+   npm run dev
+   ```
+
+---
+
+## 🔌 Логика данных
+
+**📥 Входящие сообщения с сервера**
+
+      {
+        "WS_LE1_VAL": 52.07,
+        "WS_PE1_VAL": 2.59,
+        "enable_P1_cmd": true
+      }
+
+**🔁 После преобразования через mapMessageToDomain**
+
+      {
+        telemetry: { waterLevel: 52.07, waterPressure: 2.59 },
+        commands: { enable_P1_cmd: true }
+      }
+
+**🧩 Использование в App**
+
 ```
+<PressureChartLive pressure={telemetry.waterPressure} isMobile={isMobile} />
+<WaterBarrel value={telemetry.waterLevel} lowWater={telemetry.waterLevel <= 30} />
+<WaterControls commands={commands} connected={connected} />
+```
+
+## 🛠️ Технологии
+
+| Технология                   | Использование                      |
+| :--------------------------- | :--------------------------------- |
+| ⚛️ **React + TypeScript**    | Основная платформа                 |
+| ⚡ **Vite**                  | Быстрая dev-сборка                 |
+| 📈 **Recharts**              | График давления                    |
+| 🎨 **CSS Modules**           | Изолированные стили компонентов    |
+| 🌐 **WebSocket + Fetch API** | Связь с сервером (реалтайм и REST) |

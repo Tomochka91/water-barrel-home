@@ -4,22 +4,52 @@ import { COMMAND_LABELS } from "../../utils/labels";
 import type { CommandKey, CommandsState } from "../../utils/types";
 import styles from "./WaterControls.module.css";
 
+/**
+ * Пропсы компонента WaterControls.
+ */
 type WaterControlsProps = {
+  /** Текущее состояние всех управляющих команд */
   commands: Partial<CommandsState>;
+  /** Статус подключения к WebSocket (пока не используется в UI) */
   connected: boolean;
 };
 
+/**
+ * Компонент панели управления системой.
+ *
+ * Позволяет отправлять команды на сервер OPC через REST API.
+ * Каждая кнопка отражает текущее состояние команды (`ON` / `OFF`),
+ * и при клике переключает её значение.
+ *
+ * @example
+ * ```tsx
+ * <WaterControls commands={commands} connected={connected} />
+ * ```
+ */
 export function WaterControls({
   commands,
   connected: _connected,
 }: WaterControlsProps) {
-  const { write, busy, error } = useOpcWriter("https://192.168.1.2:8000");
+  /**
+   * Хук для записи команд на сервер.
+   * Использует базовый адрес текущего сайта (location.protocol + location.host).
+   */
+  // const { write, busy, error } = useOpcWriter("https://192.168.1.2:8000");
+  const { write, busy, error } = useOpcWriter(
+    `${location.protocol}//${location.host}`
+  );
 
+  /**
+   * Переключение состояния команды.
+   *
+   * @param name Имя команды (например, `"enable_P1_cmd"`)
+   */
   async function toggle(name: CommandKey) {
     const cur = Boolean(commands[name]);
     await write(name, !cur);
   }
 
+  /** Список всех доступных команд из словаря меток */
   const keys = Object.keys(COMMAND_LABELS) as CommandKey[];
 
   return (

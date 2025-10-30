@@ -3,24 +3,37 @@ import styles from "./WaterBarrel.module.css";
 import clsx from "clsx";
 
 /**
- * WaterBarrel — SVG-компонент «бочка с водой» с заливкой по value и рыбкой
+ * WaterBarrel — SVG-компонент «бочка с водой» с заливкой по value и волнами.
  *
- * Props:
- *  - value: число текущего уровня (0..max)
- *  - max: верхняя граница шкалы (по умолчанию 100)
- *  - width: ширина SVG в px (по умолчанию 260)
- *  - showLabel: показывать процент/значение (boolean)
- *  - color: основной цвет воды
+ * Отрисовывает:
+ * - корпус бочки, тень и металлические обручи;
+ * - внутреннюю «чашу» с заливкой от уровня;
+ * - волны поверх воды (двойной слой для глубины);
+ * - необязательную шкалу процентов слева;
+ * - подпись с процентом (если `showLabel = true`);
+ * - декоративную рыбку внутри воды;
+ * - ARIA-лейбл для скринридеров.
+ *
+ * Геометрия:
+ * - общая ширина svg = `width + scaleGutter` (если включена шкала);
+ * - высота svg ≈ `width * 1.3`;
+ * - внутренняя чаша определяется прямоугольником `inner` с закруглениями.
  */
 
 type WaterBarrelProps = {
+  /** Текущее значение уровня воды (0..max). По умолчанию 100. */
   value?: number;
+  /** Максимальное значение шкалы (верхняя граница). По умолчанию 100. */
   max?: number;
+  /** Базовая ширина бочки в пикселях (без шкалы). По умолчанию 260. */
   width?: number;
+  /** Показывать подпись с процентом поверх бочки. По умолчанию true. */
   showLabel?: boolean;
-  /** основной цвет волн (перекрывает тему) */
+  /** Основной цвет волн (переопределяет тему). */
   color?: string;
+  /** Показывать левую шкалу процентов (100/75/50/25/0). По умолчанию true. */
   showScale?: boolean;
+  /** Флаг «низкий уровень», подсвечивает бочку (класс `styles.low`). */
   lowWater?: boolean;
 };
 
@@ -33,23 +46,26 @@ export function WaterBarrel({
   showScale = true,
   lowWater,
 }: WaterBarrelProps) {
+  /** Уникальный id для clipPath; чистим от недопустимых символов для SVG. (делаем id безопасным для SVG (убираем «:» и пр.)*/
   const reactId = useId();
-  // делаем id безопасным для SVG (убираем «:» и пр.)
   const safeId = useMemo(
     () => reactId.replace(/[^a-zA-Z0-9_-]/g, "_"),
     [reactId]
   );
 
+  /** Размеры SVG */
   const svgW = width;
   const svgH = Math.round(svgW * 1.3);
 
+  /** Сдвиг под шкалу слева (если включена) */
   const scaleGutter = showScale ? 48 : 0; // слева место под «100%»
   const svgOuterW = width + scaleGutter; // общая ширина SVG
 
+  /** Нормализация значения: 0..max → доля уровня 0..1 */
   const clamped = parseFloat(Math.max(0, Math.min(value, max)).toFixed(2));
   const level = clamped / max; // 0..1
 
-  // Геометрия внутренней области бочки (куда будет заливаться вода)
+  /** Геометрия внутренней чаши бочки */
   const inner = {
     x: 40,
     y: 20,
@@ -58,14 +74,14 @@ export function WaterBarrel({
     rx: 26,
   };
 
-  // Высота воды с учётом уровня
+  /** Положение воды (верх и высота заливки) */
   const waterHeight = inner.h * level;
   const waterTop = inner.y + (inner.h - waterHeight);
 
-  // Волны (генерация синусоподобного пути)
+  /** Генерация пути волн (легкая синусоида) */
   const wavePath = useMemo(() => {
     const amp = 8; // амплитуда волны
-    const len = inner.w + 80; // длина дорожки волны
+    const len = inner.w + 80; // ширина «полосы» волны
     const step = 24;
     let d = `M 0 ${amp}`;
     for (let x = 0; x <= len; x += step) {
@@ -76,9 +92,10 @@ export function WaterBarrel({
     return d;
   }, [inner.w]);
 
+  /** Процент для подписи/ARIA */
   const percent = Math.round((clamped / max) * 100);
 
-  // Для обручей и шкалы
+  /** Координаты «обручей» — используются и для рисок шкалы */
   const hoopYs = [
     inner.y - 0.5,
     inner.y + inner.h * 0.25,
@@ -118,7 +135,7 @@ export function WaterBarrel({
           </clipPath>
         </defs>
 
-        {/* Шкала слева на уровнях обручей */}
+        {/* Левая шкала процентов, синхронизированная с обручами */}
         {showScale && (
           <g className={styles.scale} aria-hidden="true">
             {hoopYs.map((y, i) => {
@@ -157,7 +174,7 @@ export function WaterBarrel({
           </g>
         )}
 
-        {/* ВСЮ БОЧКУ СДВИГАЕМ ВПРАВО НА scaleGutter */}
+        {/* Вся бочка сдвигается вправо на ширину поля шкалы scaleGutter */}
         <g transform={`translate(${scaleGutter} 0)`}>
           {/* Тень под бочкой */}
           <ellipse

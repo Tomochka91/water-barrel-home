@@ -83,8 +83,8 @@ html {
 body {
   margin: 0;
   width: 100%;
-  /* min-width: 320px; */
-  min-height: 100vh;
+  block-size: 100vh;
+  /* min-height: 100vh; */
   display: flex;
   justify-content: center;
   background: linear-gradient(
