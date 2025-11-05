@@ -4,9 +4,9 @@ html {
   font-size: 62.5%;
 }
 
-#root {
+/* #root {
   margin: auto;
-}
+} */
 
 :root {
   /*  color-scheme */
@@ -81,9 +81,10 @@ html {
 }
 
 body {
-  margin: 0;
+  margin: 0 auto;
   width: 100%;
   block-size: 100vh;
+  padding: 2rem 4rem;
   /* min-height: 100vh; */
   display: flex;
   justify-content: center;
@@ -114,6 +115,10 @@ h1 {
 }
 
 @media (width < 768px) {
+  body {
+    padding: 1.6rem 2rem;
+  }
+
   .container {
     grid-template-columns: 1fr;
     column-gap: 0;
