@@ -88,9 +88,9 @@ html {
 body {
   margin: 0;
   width: 100%;
-  block-size: 100vh;
+  /* block-size: 100vh; */
   padding: 2rem 4rem;
-  /* min-height: 100vh; */
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;

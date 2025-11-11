@@ -36,23 +36,24 @@ export const COMMAND_KEYS: CommandKey[] = [
 ];
 
 /**
- * Преобразует «сырое» сообщение от сервера в структуру, удобную для фронтенда.
+ * Преобразует часть «сырого» сообщения от сервера
+ * в объект телеметрии, удобный для отображения во фронтенде.
  *
- * @param raw - частичное сообщение от сервера (snapshot или update)
- * @returns Объект с двумя полями:
- * - `telemetry`: значения датчиков (уровень воды, давление);
- * - `commands`: состояния управляющих команд (true/false).
+ * @param {Partial<messageData>} [raw] - необязательный фрагмент данных, полученный от сервера (snapshot или update)
+ * @returns {Telemetry} Объект телеметрии:
+ * - `waterLevel` — уровень воды в бочке, %
+ * - `waterPressure` — давление перед фильтрами, бар
+ * - `pressureAfterFilter` — давление после фильтров, бар
  *
  * @example
  * ```ts
- * const { telemetry, commands } = mapMessageToDomain({
+ * const telemetry = mapTelemetry({
  *   WS_LE1_VAL: 52.1,
  *   WS_PE1_VAL: 2.6,
- *   enable_P1_cmd: true,
+ *   WS_PE2_VAL: 2.3,
  * });
  *
- * console.log(telemetry.waterLevel); // 52.1
- * console.log(commands.enable_P1_cmd); // true
+ * console.log(telemetry.waterPressure); // 2.6
  * ```
  */
 
@@ -66,6 +67,26 @@ export function mapTelemetry(raw?: Partial<messageData>): Telemetry {
 
   return telemetry;
 }
+
+/**
+ * Преобразует «сырые» флаги команд из сообщения сервера
+ * в структуру состояний команд фронтенда.
+ *
+ * @param {Partial<messageData>} [raw] - необязательный фрагмент данных с флагами команд
+ * @returns {Partial<CommandsState>} Объект состояний управляющих команд,
+ * где каждое поле — булево значение (`true`/`false`).
+ *
+ * @example
+ * ```ts
+ * const commands = mapCommands({
+ *   enable_P1_cmd: true,
+ *   enable_P2_cmd: false,
+ * });
+ *
+ * console.log(commands.enable_P1_cmd); // true
+ * console.log(commands.enable_P2_cmd); // false
+ * ```
+ */
 
 export function mapCommands(
   raw?: Partial<messageData>
