@@ -9,6 +9,8 @@ export type messageData = {
   WS_LE1_VAL: number;
   /** Давление воды (бар) */
   WS_PE1_VAL: number;
+  /** Давление воды (бар) после фильтров */
+  WS_PE2_VAL: number;
   /** Команда: ручной сброс аварии */
   alm_reset_cmd: boolean;
   /** Команда: авто-сброс аварий */
@@ -53,16 +55,21 @@ export const COMMAND_KEYS: CommandKey[] = [
  * console.log(commands.enable_P1_cmd); // true
  * ```
  */
-export function mapMessageToDomain(raw?: Partial<messageData>): {
-  telemetry: Telemetry;
-  commands: Partial<CommandsState>;
-} {
+
+export function mapTelemetry(raw?: Partial<messageData>): Telemetry {
   /** Данные телеметрии (уровень воды, давление) */
   const telemetry: Telemetry = {
     waterLevel: raw?.WS_LE1_VAL ?? 0,
     waterPressure: raw?.WS_PE1_VAL ?? 0,
+    pressureAfterFilter: raw?.WS_PE2_VAL ?? 0,
   };
 
+  return telemetry;
+}
+
+export function mapCommands(
+  raw?: Partial<messageData>
+): Partial<CommandsState> {
   /** Состояние управляющих команд */
   const commands: Partial<CommandsState> = {};
 
@@ -70,5 +77,5 @@ export function mapMessageToDomain(raw?: Partial<messageData>): {
     commands[k] = Boolean(raw?.[k]);
   }
 
-  return { telemetry, commands };
+  return commands;
 }

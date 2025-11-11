@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import "../app/global.css";
 import { WaterBarrel } from "../widgets/WaterBarrel/WaterBarrel";
 import {
-  mapMessageToDomain,
+  mapCommands,
+  mapTelemetry,
   type messageData,
 } from "../shared/mappers/websocketMapper";
 import { useWebSocket } from "../shared/hooks/useWebSocket";
@@ -29,12 +30,10 @@ function App() {
    */
 
   const proto = location.protocol === "https:" ? "wss" : "ws";
-  const { values, connected } = useWebSocket<messageData>(
+  const { values } = useWebSocket<messageData>(
     `${proto}://${location.host}/ws`
   );
-  // const { values, connected } = useWebSocket<messageData>(
-  //   "ws://192.168.1.2:8000/ws"
-  // );
+  // const { values } = useWebSocket<messageData>("ws://192.168.1.2:8000/ws");
 
   /** Флаг отображения подписей (уровень воды в процентах) */
   const [label] = useState(true);
@@ -47,7 +46,19 @@ function App() {
    * telemetry — данные сенсоров (уровень воды, давление и т.п.)
    * commands — доступные управляющие команды.
    */
-  const { telemetry, commands } = mapMessageToDomain(values);
+  const telemetry = mapTelemetry(values);
+
+  const commands = useMemo(
+    () => mapCommands(values),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      values?.alm_reset_cmd,
+      values?.auto_alm_reset_cmd,
+      values?.enable_P1_cmd,
+      values?.enable_P2_cmd,
+      values?.enable_shedule,
+    ]
+  );
 
   /** Считаем, что уровень воды низкий, если ≤ 30% */
   const lowWater = telemetry.waterLevel <= 30;
@@ -55,9 +66,10 @@ function App() {
   return (
     <div className="container">
       {/* График давления воды (рендерится, только если есть данные) */}
-      {!!telemetry.waterPressure && (
+      {telemetry.waterPressure && (
         <PressureChartLive
           pressure={Number(telemetry.waterPressure.toFixed(2))}
+          pressureAfterFilter={Number(telemetry.pressureAfterFilter.toFixed(2))}
           isMobile={isMobile}
         />
       )}
@@ -70,7 +82,7 @@ function App() {
         lowWater={lowWater}
       />
       {/* Панель управления насосами и автоматикой */}
-      <WaterControls commands={commands} connected={connected} />
+      <WaterControls commands={commands} />
     </div>
   );
 }

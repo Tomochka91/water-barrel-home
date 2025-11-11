@@ -52,10 +52,12 @@ html {
 
   /* 🌸 Акцентная (дополнительная) гамма */
   --color-rose-light: #fdecf2; /* светло-розовый фон */
+  --color-rose-bright: #ed1d5b;
   --color-rose-accent: #9c0d38; /* акцент — бордово-малиновый */
   --color-rose-dark: #5c0a27; /* глубокий винный */
 
   --color-gold-bright: #ffef5c;
+  --color-green-bright: #36bf51;
 
   --color-standart: #000;
   --color-standart-white: #fff;
@@ -72,6 +74,9 @@ html {
   --scale-text: var(--color-sky-dark-thunder);
   --cartesian-grid: var(--color-sky-medium-bright);
   --pressure-line: var(--color-sky-dark-denim);
+  --pressure-line-after-filter: var(--color-clay);
+  --error: var(--color-rose-bright);
+  --border: var(--color-sky-dark-thunder);
 }
 
 *,
@@ -81,13 +86,14 @@ html {
 }
 
 body {
-  margin: 0 auto;
+  margin: 0;
   width: 100%;
   block-size: 100vh;
   padding: 2rem 4rem;
   /* min-height: 100vh; */
   display: flex;
   justify-content: center;
+  align-items: center;
   background: linear-gradient(
     90deg,
     var(--color-sand-light) 0%,

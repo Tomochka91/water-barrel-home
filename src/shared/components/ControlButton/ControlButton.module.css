@@ -1,0 +1,49 @@
+.btn {
+  width: 100%;
+  font-family: inherit;
+  font-size: 2rem;
+  display: block;
+  padding: 1.6rem 2rem;
+  border-radius: 0.8rem;
+  background-color: var(--color-sky-lightest);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  text-align: left;
+  transform: translateY(-2px);
+  transition: all 0.1s;
+}
+
+.btn:hover {
+  background-color: var(--color-sky-light);
+}
+
+.btn:active {
+  background-color: var(--color-sky-lightest);
+  transform: translateY(0);
+}
+
+.btn-busy {
+  cursor: not-allowed;
+}
+
+.btn-on {
+  color: var(--color-green-bright);
+  border: 1px solid var(--border);
+}
+
+.btn-off {
+  color: var(--error);
+  border: 1px solid var(--border);
+}
+
+@media (width < 768px) {
+  .btn {
+    font-size: 1.4rem;
+    padding: 0.6rem 1rem;
+    text-align: center;
+  }
+
+  .btn:nth-child(3n) {
+    grid-column: 1 / -1;
+  }
+}

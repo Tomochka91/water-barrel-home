@@ -31,4 +31,5 @@ export interface WaterSystemState {
 export type Telemetry = {
   waterLevel: number;
   waterPressure: number;
+  pressureAfterFilter: number;
 };

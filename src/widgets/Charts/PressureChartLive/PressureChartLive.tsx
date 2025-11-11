@@ -32,6 +32,8 @@ const formatTime = (t: number) =>
 type PressureProps = {
   /** Текущее давление (бар) */
   pressure: number | null;
+  /** Текущее давление (бар) после фильтров */
+  pressureAfterFilter: number | null;
   /** Флаг мобильного режима для адаптации размеров и шрифта */
   isMobile: boolean;
 };
@@ -49,22 +51,31 @@ type PressureProps = {
  * <PressureChartLive pressure={telemetry.waterPressure} isMobile={isMobile} />
  * ```
  */
-export function PressureChartLive({ pressure, isMobile }: PressureProps) {
+export function PressureChartLive({
+  pressure,
+  pressureAfterFilter,
+  isMobile,
+}: PressureProps) {
   /** Состояние данных для графика: массив точек (время, давление) */
-  const [data, setData] = useState<Array<{ t: number; pr: number }>>([]);
+  const [data, setData] = useState<
+    Array<{ t: number; pr: number; prF: number }>
+  >([]);
 
   /** Добавляем новую точку при каждом изменении давления */
   useEffect(() => {
-    if (pressure === null) return;
+    if (pressure === null || pressureAfterFilter === null) return;
 
     const now = Date.now();
     setData((prev) => {
-      const next = [...prev, { t: now, pr: pressure }];
+      const next = [
+        ...prev,
+        { t: now, pr: pressure, prF: pressureAfterFilter },
+      ];
       // Оставляем только точки в пределах последней минуты
       const cutoff = now - WINDOW_MS;
       return next.filter((p) => p.t >= cutoff);
     });
-  }, [pressure]);
+  }, [pressure, pressureAfterFilter]);
 
   /** Временные границы окна (xDomain) */
   const lastT = data.length ? data[data.length - 1].t : Date.now();
@@ -129,6 +140,21 @@ export function PressureChartLive({ pressure, isMobile }: PressureProps) {
               r: 2,
               fill: "var(--pressure-line)",
               stroke: "var(--color-gold-bright)",
+              strokeWidth: 2,
+            }}
+          />
+          {/* Линия давления после фильтров*/}
+          <Line
+            type="monotone"
+            dataKey="prF"
+            stroke="var(--pressure-line-after-filter)"
+            strokeWidth={2}
+            dot={false}
+            isAnimationActive={false}
+            activeDot={{
+              r: 2,
+              fill: "var(--pressure-line-after-filter)",
+              stroke: "var(--color-sand-light)",
               strokeWidth: 2,
             }}
           />
